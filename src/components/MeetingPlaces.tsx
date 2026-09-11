@@ -4,18 +4,19 @@ import { useEffect, useState } from 'react';
 
 type MeetingPlaceType = Schema['MeetingPlace']['type'];
 
-export function MeetingPlaces() {
-  const placesClient = generateClient<Schema>().models.MeetingPlace;
+const placesClient = generateClient<Schema>().models.MeetingPlace;
 
+export function MeetingPlaces() {
   const [meetingPlaces, setMeetingPlaces] = useState<Array<MeetingPlaceType>>(
     [],
   );
 
   useEffect(() => {
-    placesClient.observeQuery().subscribe({
+    const sub = placesClient.observeQuery().subscribe({
       next: data => setMeetingPlaces([...data.items]),
     });
-  }, [placesClient]);
+    return () => sub.unsubscribe();
+  }, []);
 
   function createPlace() {
     placesClient.create({
