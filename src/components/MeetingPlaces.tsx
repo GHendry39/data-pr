@@ -15,7 +15,7 @@ export function MeetingPlaces() {
       next: data => setMeetingPlaces([...data.items]),
     });
     return () => sub.unsubscribe();
-  }, []);
+  }, [placesClient]);
 
   function createPlace() {
     placesClient.create({
